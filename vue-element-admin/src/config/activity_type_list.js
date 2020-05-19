@@ -1,0 +1,35 @@
+export const activity_type_list = {
+    1:'act_back_type_recharge_rank',
+    2:'act_back_type_consumption_rank',
+    3:'act_back_type_recharge1',
+    4:'act_back_type_recharge2',
+    5:'act_back_type_vip_gift',
+    6:'act_back_type_recharge_first',
+    7:'act_back_type_recharge_continue',
+    8:'act_back_type_recharge_special',
+    9:'act_back_type_investment',
+    10:'act_back_type_discount1',
+    11:'act_back_type_discount2',
+    12:'act_back_type_collect_cash',
+    13:'act_back_type_all_buy',
+    14:'act_back_type_luck_cat',
+    15:'act_back_type_ten_even_smoke',
+    16:'act_back_type_login',
+    17:'act_back_type_make_wish',
+    18:'act_back_type_use_gold',
+    19:'act_back_type_lucky_draw1',
+    20:'act_back_type_lucky_draw2',
+    21:'act_back_type_sign',
+    22:'act_back_type_quest',
+    23:'act_back_type_double_drop',
+    24:'act_back_type_recharge3',
+    25:'act_back_type_recharge_sigle',
+    26:'act_back_type_recharge_continue2',
+}
+
+
+export const date_type={
+    0:'customized_time',
+    1:'according_open_time',
+    2:'permanent',
+}
