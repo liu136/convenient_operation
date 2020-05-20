@@ -4,7 +4,7 @@
  * **/
 export default {
   pull_data:{
-    url:'/api/server/pull_data',
+    url:'/server/pull_data',
     method:'post',
     permission:true,
     description:'添加后台游戏活动配置'
