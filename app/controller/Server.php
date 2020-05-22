@@ -21,7 +21,7 @@ class Server extends BaseController
         file_put_contents('/home/www/dataSh/'. $pull_data_file_name .'.sh', $pull_data_file);
 
         // 移动拉取数据文件到指定服务器
-        shell_exec('scp -p 9669 /home/www/dataSh/' . $pull_data_file_name .'.sh' . ' root@122.114.222.172 /home/getData/dataSh');
+        shell_exec('scp -P 9669 /home/www/dataSh/' . $pull_data_file_name .'.sh' . ' root@122.114.222.172:/home/getData/dataSh');
         // 执行拉取数据 shell 脚本
         $res = shell_exec('ssh -p 9669 root@122.114.222.172 bash /home/getData/main.sh ' . $pull_data_file_name . '.sh');
 
