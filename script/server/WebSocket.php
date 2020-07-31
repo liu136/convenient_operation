@@ -20,6 +20,8 @@ class WebSocket
         $this->ws->on('open', array($this, 'onOpen'));
         $this->ws->on('message', array($this, 'onMessage'));
         $this->ws->on('close', array($this, 'onClose'));
+
+        $this->ws->start();
     }
 
     public  function onOpen($server, $request)
@@ -38,3 +40,5 @@ class WebSocket
         print_r($fd. '-----' . $reactorId);
     }
 }
+
+new WebSocket();
