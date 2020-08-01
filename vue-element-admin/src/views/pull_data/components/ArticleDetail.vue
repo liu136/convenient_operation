@@ -1,3 +1,4 @@
+<script src="../../../../../../swoole/live/public/static/live/js/live.js"></script>
 <template>
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
@@ -42,6 +43,13 @@
                 </el-radio>
               </el-radio-group>
             </el-dropdown-item>
+
+            <el-dialog v-el-drag-dialog :visible.sync="dialogTableVisible" title="拉取数据返回的结果" @dragDialog="handleDrag">
+              <el-table :data="gridData">
+                <el-table-column property="data" label="拉取数据返回的结果" />
+              </el-table>
+            </el-dialog>
+
           </el-col>
         </el-row>
       </div>
@@ -55,6 +63,7 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchArticle } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import  { pullData } from '@/api/server'
+import elDragDialog from "@/directive/el-drag-dialog";
 
 const defaultForm = {
   ip: '', // 目标机器的IP
@@ -66,6 +75,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
+  directives: { elDragDialog },
   components: { MDinput, Sticky },
   props: {
     isEdit: {
@@ -95,9 +105,27 @@ export default {
         local_database: [{ validator: validateRequire }],
         actor_id: [{ validator: validateRequire }]
       },
-      tempRoute: {}
+      tempRoute: {},
+
+      path:"ws://yw_api.7cwan.com:9501",
+      socket:"",
+
+      dialogTableVisible: false,
+      value: '',
+      gridData: []
     }
   },
+
+  mounted() {
+    // 初始化
+    this.init();
+  },
+
+  destroyed() {
+    // 销毁监听
+    this.socket.onclose = this.close
+  },
+
   computed: {
     contentShortLength() {
       return this.postForm.content_short.length
@@ -127,6 +155,45 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+
+    // v-el-drag-dialog onDrag callback function
+    handleDrag() {
+      this.$refs.select.blur()
+    },
+
+    init() {
+      if(typeof(WebSocket) === "undefined"){
+        alert("您的浏览器不支持socket")
+      }else{
+        // 实例化socket
+        this.socket = new WebSocket(this.path)
+        // 监听socket连接
+        this.socket.onopen = this.open
+        // 监听socket错误信息
+        this.socket.onerror = this.error
+        // 监听socket消息
+        this.socket.onmessage = this.getMessage
+      }
+    },
+    open: function () {
+      console.log("socket连接成功")
+    },
+    error: function () {
+      console.log("连接错误")
+    },
+    getMessage: function (msg) {
+
+      this.gridData.push({data : msg.data})
+
+      console.log(msg.data)
+    },
+    send: function () {
+      this.socket.send(params)
+    },
+    close: function () {
+      console.log("socket已经关闭")
+    },
+
     fetchData(id) {
       fetchArticle(id).then(response => {
         this.postForm = response.data
@@ -154,9 +221,11 @@ export default {
       document.title = `${title} - ${this.postForm.id}`
     },
     submitForm() {
+
       console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
         if (valid) {
+          this.dialogTableVisible = true;
           const context = this;
           this.loading = true
           pullData(this.postForm).then(res => {
